@@ -1,5 +1,8 @@
 package pl.coderslab;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,14 +26,24 @@ public class TaskManager {
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
             switch (input) {
-                case "exit": case "4": case "Exit":
+                case "exit":
+                case "4":
+                case "Exit":
                     break;
-                case "add": case "1": case "Add":
+                case "add":
+                case "1":
+                case "Add":
                     addTask();
                     break;
-                case "remove": case "2": case "Remove":
+                case "remove":
+                case "2":
+                case "Remove":
+                    removeTask(tasks, getTheNumber());
+                    System.out.println("Value was successfully deleted.");
                     break;
-                case "list": case "3": case "List":
+                case "list":
+                case "3":
+                case "List":
                     printTab(tasks);
                     break;
                 default:
@@ -102,5 +115,38 @@ public class TaskManager {
         tasks[tasks.length - 1][2] = isImportant;
     }
 
+    // Pobranie numeru zadania do usunięcia
+    public static int getTheNumber() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please select number to remove.");
+
+        String n = scanner.nextLine();
+        while (!isNumberGreaterEqualZero(n)) {
+            System.out.println(ConsoleColors.RED);
+            System.out.println("Incorrect argument passed. Please give number greater or equal 0" + ConsoleColors.RESET);
+            scanner.nextLine();
+        }
+        return Integer.parseInt(n);
+    }
+
+    // Sprawdzanie, czy podany numer zadania do usunięcia (jako String) jest możliwy do przekształcenia na int
+    public static boolean isNumberGreaterEqualZero(String input) {
+        if (NumberUtils.isParsable(input)) {
+            return Integer.parseInt(input) >= 0;
+        }
+        return false;
+    }
+
+    // Usuwanie zadania
+    private static void removeTask(String[][] tab, int index) {
+        try {
+            if (index < tab.length) {
+                tasks = ArrayUtils.remove(tab, index);
+            }
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            System.out.println(ConsoleColors.RED);
+            System.out.println("Element not exist in tab" + ConsoleColors.RESET);
+        }
+    }
 
 }
