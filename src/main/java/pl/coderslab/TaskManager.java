@@ -29,6 +29,9 @@ public class TaskManager {
                 case "exit":
                 case "4":
                 case "Exit":
+                    saveTabToFile(FILE_NAME, tasks);
+                    System.out.println(ConsoleColors.RED + "Bye, bye.");
+                    System.exit(0);
                     break;
                 case "add":
                 case "1":
@@ -38,8 +41,10 @@ public class TaskManager {
                 case "remove":
                 case "2":
                 case "Remove":
+                    printTab(tasks);
                     removeTask(tasks, getTheNumber());
-                    System.out.println("Value was successfully deleted.");
+                    System.out.println(ConsoleColors.GREEN);
+                    System.out.println("Value was successfully deleted." + ConsoleColors.RESET);
                     break;
                 case "list":
                 case "3":
@@ -118,7 +123,8 @@ public class TaskManager {
     // Pobranie numeru zadania do usunięcia
     public static int getTheNumber() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please select number to remove.");
+        System.out.println(ConsoleColors.BLUE);
+        System.out.println("Please select number to remove." + ConsoleColors.RESET);
 
         String n = scanner.nextLine();
         while (!isNumberGreaterEqualZero(n)) {
@@ -148,5 +154,23 @@ public class TaskManager {
             System.out.println("Element not exist in tab" + ConsoleColors.RESET);
         }
     }
+
+    // Zapis tablicy do pliku
+    public static void saveTabToFile(String fileName, String[][] tab) {
+        Path dir = Paths.get(fileName);
+
+        String[] lines = new String[tasks.length];
+        for (int i = 0; i < tab.length; i++) {
+            lines[i] = String.join(",", tab[i]);
+        }
+
+        try {
+            Files.write(dir, Arrays.asList(lines));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
 
 }
