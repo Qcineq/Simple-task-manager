@@ -1,5 +1,11 @@
 package pl.coderslab;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 public class TaskManager {
 
     static final String FILE_NAME = "tasks.csv";                                        // informacje o zadaniach
@@ -8,6 +14,7 @@ public class TaskManager {
 
 
     public static void main(String[] args) {
+        tasks = loadDataToTab(FILE_NAME);
         printOptions(OPTIONS);
     }
 
@@ -20,6 +27,31 @@ public class TaskManager {
         }
     }
 
+    // pobieranie danych z pliku
+    public static String[][] loadDataToTab(String fileName) {
+        Path dir = Paths.get(fileName);
+        if (!Files.exists(dir)) {                                                          // sprawdzanie, czy plik o podanej nazwie istnieje
+            System.out.println(ConsoleColors.RED);
+            System.out.println("File not exist." + ConsoleColors.RESET);
+            System.exit(0);
+        }
+
+        String[][] tab = null;                                                              // tablica, którą metoda będzie zwracać
+        try {
+            List<String> strings = Files.readAllLines(dir);                                 // wczytywanie zawartości pliku
+            tab = new String[strings.size()][strings.get(0).split(",").length];
+
+            for (int i = 0; i < strings.size(); i++) {                                      // umieszczanie wczytanych danych do tablicy
+                String[] split = strings.get(i).split(",");
+                for (int j = 0; j < split.length; j++) {
+                    tab[i][j] = split[j];
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tab;
+    }
 
 
 }
